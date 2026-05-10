@@ -1,1 +1,1 @@
-#aqui la logica de la configuracion, se pueden agregar variables para configurar el programa, como el path de las imagenes, el modelo a utilizar, etc.
+#aqui la logica de la configuracion de tesseract.

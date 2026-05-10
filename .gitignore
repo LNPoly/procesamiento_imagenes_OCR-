@@ -1,0 +1,16 @@
+# Entorno Virtual
+.venv/
+venv/
+env/
+ENV/
+
+# Byte-compiled / Optimización de Python (Archivos temporales)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS Code
+.vscode/
+
+# Variables de entorno / Secretos
+.env
