@@ -1,10 +1,16 @@
-# OCR - Deteccion de texto en imagenes 
+from src.procesador_imagen.procesador_imagen import Inicializador, Estandarizador
 
-#acá se ejecuta el programa, se llama a las funciones y se muestra la imagen resultante
-class ProcesorImg:
-    def __init__(self):
-        pass
+def main():
+    #IMPORTANTE:
+    # por ahora estas rutas estan hardcodeadas, despues cuando haga la interfaz, vamos a probar desde ahi.
+    
+    ruta_entrada = "./data/img_original/texto1.jpg"
+    ruta_salida = "./data/img_procesada/estandarizada.png"
 
-    def procesar_imagen(self, imagen):
-        # aqui va la logica para procesar la imagen, por ejemplo, eliminar ruido, mejorar contraste, etc.
-        return imagen
+    imagen = Estandarizador(ruta_entrada)
+    imagen.estandarizar(1500).guardar(ruta_salida)
+    
+    print("Proceso completado con éxito.")
+
+if __name__ == "__main__":
+    main()
