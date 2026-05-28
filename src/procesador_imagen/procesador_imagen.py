@@ -20,7 +20,6 @@ class Inicializador:
 #Estandarización de tamaños. 
 #Esta función toma una imagen y la redimensiona a un tamaño específico, manteniendo la relación de aspecto original.
 
-
 class Estandarizador(Inicializador):
     
     def estandarizar(self, ancho_objetivo=1500) -> "Estandarizador":
@@ -35,4 +34,3 @@ class Estandarizador(Inicializador):
         
         print(f"Imagen reescalada a: {ancho_objetivo}x{alto_nuevo} (Manteniendo proporción)")
         return self
-
