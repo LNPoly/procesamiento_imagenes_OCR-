@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>Procesador de Imágenes</title>
+</head>
+<body>
+    <header>
+        <h1>Procesador de Imágenes y Analizador de Texto</h1>
+    </header>
+    <main>
+        <form id="uploadForm">
+            <label for="image">Selecciona una imagen para procesar</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            
+            <div id="previewWrapper" class="preview-container">
+                <h3>Vista Previa</h3>
+                <img id="localPreview" class="thumbnail" src="" alt="Miniatura local">
+            </div>
+
+            <button type="submit" style="margin-top: 15px;">Subir y Procesar</button>
+        </form>
+
+        <div id="resultWrapper" class="resultado-container">
+            <h2>Resultados del Análisis</h2>
+            <p id="statusMsg"></p>
+            
+            <div>
+                <img id="finalImage" class="img-final" src="" alt="Resultado Final">
+            </div>
+            
+            <div>
+                <h3>Texto Analizado:</h3>
+                <div id="textAnalysisOutput" class="output-texto"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 Procesador de Imágenes. Todos los derechos reservados.</p>
+    </footer>
+    <script src="static/js/script.js"></script>
+</body>
+</html>
