@@ -1,24 +1,7 @@
-# aqui va la logica del procesamiento de imagenes, se pueden agregar funciones para mejorar la calidad de la imagen,
-# eliminar ruido, etc.
 from PIL import Image
-
-class Inicializador:
-    
-    def __init__(self, url: str) :
-        self._url = url
-        self._imagen = Image.open(url)
-
-    def guardar(self, new_url:str):        
-        self._imagen.save(new_url)
-        return self
-    
-    def reseteo(self):
-        self._imagen = Image.open(self._url)
-        return self
-
-
-#Estandarización de tamaños. 
-#Esta función toma una imagen y la redimensiona a un tamaño específico, manteniendo la relación de aspecto original.
+import cv2
+import numpy as np
+from src.procesador_imagen.inicializador import Inicializador
 
 class Estandarizador(Inicializador):
     

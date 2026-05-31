@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
-from src.procesador_imagen.procesador_imagen import Estandarizador
+from src.procesador_imagen.estandarizador import Estandarizador
 
 app = Flask(__name__)
 
