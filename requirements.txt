@@ -1,0 +1,4 @@
+#Aqui se colocan las dependencias necesarias para ejecutar el programa, se pueden instalar con pip install -r requirements.txt
+
+# Pillow==12.2.0
+# OpenCV-Python==4.13.0.92
