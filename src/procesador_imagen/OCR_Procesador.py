@@ -58,7 +58,7 @@ class OCRProcesador(Inicializador):
 
         return clahe.apply(gray)
 
-    def ruido(self, gray):
+    def denoise(self, gray):
 
         # Quitamos el ruido para mejorar imagenes borrosas
         denoised = cv2.fastNlMeansDenoising(
