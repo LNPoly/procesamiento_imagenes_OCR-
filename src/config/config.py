@@ -1,1 +1,0 @@
-#aqui la logica de la configuracion de tesseract.

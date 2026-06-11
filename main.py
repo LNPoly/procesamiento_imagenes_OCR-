@@ -5,29 +5,16 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from src.procesador_imagen.estandarizador import Estandarizador
 from src.procesador_imagen.OCR_Procesador import OCRProcesador
-
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+from src.servicios import gestor_archivos
+from src.servicios import validaciones
+from src import config
 
 app = Flask(__name__)
+app.config.from_object(config)
 
-# Configuración de carpetas y extensiones permitidas
+pytesseract.pytesseract.tesseract_cmd = config.TESSERACT_CMD
 
-UPLOAD_FOLDER = os.path.join('data', 'img_originales')
-PROCESSED_FOLDER = os.path.join('data', 'img_procesada')
-TEXT_FOLDER = os.path.join('data', 'textos_extraidos')
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
-app.config['TEXT_FOLDER'] = TEXT_FOLDER
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(PROCESSED_FOLDER, exist_ok=True)
-os.makedirs(TEXT_FOLDER, exist_ok=True)
-
-# Función para verificar si el archivo tiene una extensión permitida
-def archivo_permitido(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+gestor_archivos.preparar_entorno(app)
 
 # Rutas de la aplicación
 @app.route('/')
@@ -50,66 +37,39 @@ def descargar_texto(filename):
 # Seguido de la función que maneja la carga de archivos, procesamiento de imágenes y análisis de texto.
 @app.route('/procesar', methods=['POST'])
 def procesar_archivo():
-    
-    if 'image' not in request.files:
-        return jsonify({'error': 'No se envió ninguna imagen'}), 400
+
+    es_valido, mensaje_error = validaciones.Validaciones.validar_archivo(request.files, app.config['ALLOWED_EXTENSIONS'])
+    if not es_valido:
+        return jsonify({'error': mensaje_error}), 400
     
     archivo = request.files['image']
-    if archivo.filename == '':
-        return jsonify({'error': 'Nombre de archivo vacío'}), 400
     
-    if archivo and archivo_permitido(archivo.filename):
-                
-        imagen_nombre = secure_filename(archivo.filename)
-        ruta_entrada = os.path.join(app.config['UPLOAD_FOLDER'], imagen_nombre)
-        archivo.save(ruta_entrada)
+    try:
+        imagen_nombre, ruta_entrada = gestor_archivos.guardar_imagen_original(
+            archivo, app.config['UPLOAD_FOLDER']
+        )
         
-        nombre_salida = f"estandarizada_{imagen_nombre}"
-        ruta_salida = os.path.join(app.config['PROCESSED_FOLDER'], nombre_salida)
-        
-        nombre_final_ocr = f"final_{imagen_nombre}"
-        ruta_final_ocr = os.path.join(app.config['PROCESSED_FOLDER'], nombre_final_ocr)
-                
-        try:
-            imagen = Estandarizador(ruta_entrada)
-            imagen.estandarizar(1500).guardar(ruta_salida)
-   
-            procesador_ocr = OCRProcesador()
-            procesador_ocr.proces(ruta_salida, ruta_final_ocr)
-            
-            url_original = f"/imagenes/originales/{imagen_nombre}"
-            url_resultado = f"/imagenes/procesadas/{nombre_salida}"
+        texto_real, nombre_salida, nombre_final_ocr = OCRProcesador(
+            ruta_entrada, 
+            imagen_nombre, 
+            app.config['PROCESSED_FOLDER']
+        )
     
-            print("Extrayendo texto con Tesseract...")
-            
-            imagen_para_ocr = Image.open(ruta_final_ocr)
-            texto_real = pytesseract.image_to_string(imagen_para_ocr, lang='spa')
-            
-            if not texto_real.strip():
-                texto_real = "No se detectó texto en la imagen."
-
-            nombre_txt = f"{imagen_nombre.rsplit('.', 1)[0]}.txt"
-            ruta_txt = os.path.join(app.config['TEXT_FOLDER'], nombre_txt)
-            
-            with open(ruta_txt, 'w', encoding='utf-8') as f:
-                f.write(texto_real)
-            
-            url_original = f"/imagenes/originales/{imagen_nombre}"
-            url_resultado = f"/imagenes/procesadas/{nombre_final_ocr}"
-            url_descarga_txt = f"/textos/{nombre_txt}"
-                        
-            return jsonify({
-                'success': True,
-                'msg': '¡Imagen procesada y analizada con éxito!',
-                'url_original': url_original,
-                'url_procesada': url_resultado,
-                'texto_analisis': texto_real
-            }), 200
-            
-        except Exception as e:
-            return jsonify({'error': f'Error en el procesamiento: {str(e)}'}), 500
-            
-    return jsonify({'error': 'Extensión de archivo no permitida'}), 400
+        nombre_txt = gestor_archivos.guardar_texto_extraido(
+            texto_real, imagen_nombre, app.config['TEXT_FOLDER']
+        )
+        
+        return jsonify({
+            'success': True,
+            'msg': '¡Imagen procesada y analizada con éxito!',
+            'url_original': f"/imagenes/originales/{imagen_nombre}",
+            'url_procesada': f"/imagenes/procesadas/{nombre_final_ocr}",
+            'texto_analisis': texto_real
+        }), 200
+        
+    except Exception as e:
+        print(f"Error durante el procesamiento: {e}")
+        return jsonify({'error': f'Error en el procesamiento: {str(e)}'}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
