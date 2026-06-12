@@ -7,7 +7,6 @@ from src.procesador_imagen.inicializador import Inicializador
 # y en función de eso, lo primero que se hace se evalua la imagen de ingreso si se ajusta a ese molde ideal,
 # y en función de los resultados de ese analisis se procedera a realizarles cambios que la acerquen al modelo ideal. 
 
-
 class OCRProcesador(Inicializador):
 
     def __init__(self):

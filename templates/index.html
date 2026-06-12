@@ -2,43 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="static/css/style.css">
     <title>Procesador de Imágenes</title>
 </head>
 <body>
+    <div class="grilla-tron"></div>
     <header>
         <h1>Procesador de Imágenes y Analizador de Texto</h1>
     </header>
     <main>
-        <form id="uploadForm">
-            <label for="image">Selecciona una imagen para procesar</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-            
-            <div id="previewWrapper" class="preview-container">
-                <h3>Vista Previa</h3>
-                <img id="localPreview" class="thumbnail" src="" alt="Miniatura local">
-            </div>
+        <div class="container-integrantes">
+            <h2>Integrantes del Equipo</h2>
+            <ul>
+                <li>Paula Domínguez</li>
+                <li>Juan Manuel Etchehun</li>
+                <li>Alejandro Rodríguez</li>
+            </ul>
+        </div>
 
-            <button type="submit" style="margin-top: 15px;">Subir y Procesar</button>
-        </form>
+        <div class="linea-separador scan-hover"></div>
 
-        <div id="resultWrapper" class="resultado-container">
-            <h2>Resultados del Análisis</h2>
-            <p id="statusMsg"></p>
-            
-            <div>
-                <img id="finalImage" class="img-final" src="" alt="Resultado Final">
+        <div class="texto-container">
+            <p class="text">Con el fin de poder resolver la problemática de que los documentos en forma de imagen (JPG, BMP, PNG, entre otros) decidimos poner en marcha el proyecto mediante el análisis, modificación opcional y manipulación de imagen para después pasar a por un sistema en que se pueda identificar el texto de una imagen y asi poder reconvertirlo en un formato digital editable. <br><br>Para la realización de este MVP, utilizamos Python para la codificación junto con las librerias Pillow y OpenCv que son utilizadas para la manipuación de las imágenes. En cuanto al análisis y detección de texto, se utilizó Tesseract y se conectó mediante Flask a una interfaz simple y con un diseño innovador para así, poder darle una apariencia futurista / ciberpunk.
+            </p>
+        </div>
+
+        <div class="container-procesador">
+            <form id="uploadForm">
+                <label for="image">Selecciona una imagen para procesar</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                
+                <div id="previewWrapper" class="preview-container">
+                    <h3>Vista Previa</h3>
+                    <img id="localPreview" class="thumbnail" src="" alt="Miniatura local">
+                </div>
+    
+                <button type="submit" style="margin-top: 15px;">Subir y Procesar</button>
+            </form>
+    
+            <div id="resultWrapper" class="resultado-container">
+                <h2>Resultados del Análisis</h2>
+                <p id="statusMsg"></p>
+                
+                <div>
+                    <img id="finalImage" class="img-final" src="" alt="Resultado Final">
+                </div>
+                
+                <div>
+                    <h3>Texto Analizado:</h3>
+                    <div id="textAnalysisOutput" class="output-texto"></div>
+                </div>
             </div>
             
-            <div>
-                <h3>Texto Analizado:</h3>
-                <div id="textAnalysisOutput" class="output-texto"></div>
-            </div>
         </div>
     </main>
     <footer>
-        <p>&copy; 2026 Procesador de Imágenes. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Procesamiento Digital de Imágenes | Tec. en Ciencias de Datos e Inteligencia Artificial | IFTS N° 18 | Todos los derechos reservados.</p>
     </footer>
     <script src="static/js/script.js"></script>
 </body>
