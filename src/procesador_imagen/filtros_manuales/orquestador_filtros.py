@@ -11,7 +11,9 @@ class OpenCVProcessor:
         self.reader = OpenCVImageReader()
 
     def load_image(self, path):
+        
         """Carga la imagen y la almacena en el estado del procesador."""
+        
         self._image = self.reader.open(path)
         if self._image is None:
             raise ValueError(f"No se pudo cargar la imagen en: {path}")
@@ -29,14 +31,18 @@ class OpenCVProcessor:
         print(f"Imagen guardada exitosamente en: {output_path}")
 
     def to_grayscale(self):
+        
         """Convierte la imagen a escala de grises."""
+        
         self._ensure_image_loaded()
         if len(self._image.shape) == 3:
             self._image = cv2.cvtColor(self._image, cv2.COLOR_BGR2GRAY)
         return self._image
 
     def binarize(self, threshold: int = 127):
+        
         """Convierte a blanco y negro absoluto."""
+        
         self._ensure_image_loaded()
         
         # Asegurar escala de grises antes de binarizar
@@ -48,13 +54,17 @@ class OpenCVProcessor:
         return self._image
 
     def apply_brightness_contrast(self, alpha: float, beta: int):
+        
         """Ajusta brillo (beta) y contraste (alpha)."""
+        
         self._ensure_image_loaded()
         self._image = cv2.convertScaleAbs(self._image, alpha=alpha, beta=beta)
         return self._image
 
     def reduce_noise(self, kernel_size: int = 5):
+        
         """Aplica desenfoque Gaussiano."""
+        
         self._ensure_image_loaded()
         if kernel_size % 2 == 0 or kernel_size <= 0:
             raise ValueError("El tamaño del kernel debe ser un número impar positivo.")
@@ -63,16 +73,8 @@ class OpenCVProcessor:
         return self._image
 
     def _ensure_image_loaded(self):
+        
         """Método auxiliar para validación de estado."""
+        
         if self._image is None:
             raise RuntimeError("Operación denegada: No hay ninguna imagen cargada.")
-        
-procesador = OpenCVProcessor()
-
-procesador.load_image("menu.png")
-procesador.to_grayscale()
-procesador.reduce_noise(kernel_size=3)
-procesador.apply_brightness_contrast(alpha=1.2, beta=10)
-
-# Aquí usarías el nuevo método
-procesador.save("resultado_final.jpg")

@@ -52,3 +52,80 @@ uploadForm.addEventListener('submit', async function(e) {
         statusMsg.style.color = "red";
     }
 });
+
+//script para los efecto manuales. Modularizar en otro script
+document.addEventListener('DOMContentLoaded', () => {
+    const btnFiltrosManuales = document.getElementById('btnFiltrosManuales');
+    const panelEfectos = document.getElementById('panelEfectos');
+    const selectorEfectos = document.getElementById('selectorEfectos');
+    const btnAgregarEfecto = document.getElementById('btnAgregarEfecto');
+    const listaEfectosElegidos = document.getElementById('listaEfectosElegidos');
+    const efectosOcultos = document.getElementById('efectosOcultos');
+    const btnFinalizarEfectos = document.getElementById('btnFinalizarEfectos');
+    const btnSubmitFinal = document.querySelector('#uploadForm button[type="submit"]');
+
+    const colaEfectos = [];
+
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            panelEfectos.style.display = 'block';
+            btnSubmitFinal.style.display = 'none'; 
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localPreview.src = e.target.result;
+                    previewWrapper.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    btnAgregarEfecto.addEventListener('click', () => {
+        const efecto = selectorEfectos.value;
+        const nombreEfecto = selectorEfectos.options[selectorEfectos.selectedIndex].text;
+
+        if (efecto && !colaEfectos.includes(efecto)) {
+            colaEfectos.push(efecto);
+            
+            const li = document.createElement('li');
+            li.textContent = nombreEfecto;
+            listaEfectosElegidos.appendChild(li);
+
+            efectosOcultos.value = colaEfectos.join(',');
+            actualizarLivePreview();
+        }
+        selectorEfectos.value = ''; 
+    });
+
+    btnFinalizarEfectos.addEventListener('click', () => {
+        panelEfectos.style.display = 'none';
+        btnSubmitFinal.style.display = 'block'; 
+    });
+
+    function actualizarLivePreview() {
+        const fileInput = document.getElementById('image');
+        if (!fileInput.files[0]) return;
+
+        const formData = new FormData();
+        formData.append('image', fileInput.files[0]);
+        formData.append('efectos', colaEfectos.join(','));
+
+        fetch('/preview', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Reemplazamos el src de la vista previa local con el string Base64 puro
+                localPreview.src = data.preview_base64;
+            }else {
+                console.error("Error en la previsualización del servidor:", data.error);
+            }
+        });
+    }
+});
+
+    

@@ -38,6 +38,27 @@
                     <h3>Vista Previa</h3>
                     <img id="localPreview" class="thumbnail" src="" alt="Miniatura local">
                 </div>
+
+                <div class="panelEfectos" id="panelEfectos">
+                    <h3>Efectos Manuales Opcionales</h3>
+                    <p>Seleccioná los efectos que querés aplicar antes del análisis.</p>
+                    
+                    <select id="selectorEfectos">
+                        <option value="">-- Elegir efecto --</option>
+                        <option value="gris">Escala de Grises</option>
+                        <option value="binarizar">Binarización (Blanco y Negro)</option>
+                        <option value="desenfoque">Reducción de Ruido</option>
+                        <option value="brillo">Ajuste de Brillo/Contraste</option>
+                    </select>
+                    
+                    <button type="button" id="btnAgregarEfecto">Añadir a la cola</button>
+                    
+                    <ul id="listaEfectosElegidos"></ul>
+                    
+                    <input type="hidden" id="efectosOcultos" name="efectos" value="">
+
+                    <button type="button" id="btnFinalizarEfectos">Terminar de editar</button>
+                </div>
     
                 <button type="submit" style="margin-top: 15px;">Subir y Procesar</button>
             </form>

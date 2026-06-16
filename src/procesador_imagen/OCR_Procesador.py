@@ -75,7 +75,7 @@ class OCRProcesador(Inicializador):
             255,
             cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
             cv2.THRESH_BINARY,
-            11,
+            51,
             2
         )
         return thresh

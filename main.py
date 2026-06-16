@@ -5,15 +5,14 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from src.procesador_imagen.estandarizador import Estandarizador
 from src.procesador_imagen.OCR_Procesador import OCRProcesador
-from src.servicios import gestor_archivos
-from src.servicios import validaciones
+from src.procesador_imagen.filtros_manuales.orquestador_filtros import OpenCVProcessor
+from src.servicios import gestor_archivos, validaciones, motor_filtros
 from src import config
 
 app = Flask(__name__)
 app.config.from_object(config)
 
 pytesseract.pytesseract.tesseract_cmd = config.TESSERACT_CMD
-
 gestor_archivos.preparar_entorno(app)
 
 # Rutas de la aplicación
@@ -33,10 +32,44 @@ def imagen_procesada(filename):
 def descargar_texto(filename):
     return send_from_directory(app.config['TEXT_FOLDER'], filename, as_attachment=True)
 
+@app.route('/preview', methods=['POST'])
+def previsualizar_filtros(): #modularizar esta función
+    
+    if 'image' not in request.files:
+        return jsonify({'success': False, 'error': 'Falta el archivo de imagen'}), 400
+        
+    archivo = request.files['image']
+    efectos_solicitados = request.form.get('efectos', '')
+    lista_efectos = efectos_solicitados.split(',') if efectos_solicitados else []
+    
+    if not archivo or archivo.filename == '':
+        return jsonify({'success': False, 'error': 'No se seleccionó ninguna imagen'}), 400
+        
+    try:
+        nombre_seguro = secure_filename(archivo.filename)
+        ruta_temporal = os.path.join(app.config['UPLOAD_FOLDER'], f"tmp_prev_{nombre_seguro}")
+        archivo.save(ruta_temporal)
+        
+        procesador_manual = OpenCVProcessor()
+        procesador_manual.load_image(ruta_temporal)
+        
+        procesador_manual = motor_filtros.MotorFiltros.aplicar_lista_filtros(procesador_manual, lista_efectos)
+        base64_str = motor_filtros.MotorFiltros.convertir_a_base64(procesador_manual._image)
+
+        if os.path.exists(ruta_temporal):
+            os.remove(ruta_temporal)
+            
+        return jsonify({'success': True, 'preview_base64': base64_str}), 200
+        
+    except Exception as e:
+        if 'ruta_temporal' in locals() and os.path.exists(ruta_temporal):
+            os.remove(ruta_temporal)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Ruta principal para procesar la imagen y analizar el texto.
 # Seguido de la función que maneja la carga de archivos, procesamiento de imágenes y análisis de texto.
 @app.route('/procesar', methods=['POST'])
-def procesar_archivo():
+def procesar_archivo(): 
 
     es_valido, mensaje_error = validaciones.Validaciones.validar_archivo(request.files, app.config['ALLOWED_EXTENSIONS'])
     if not es_valido:
@@ -44,16 +77,49 @@ def procesar_archivo():
     
     archivo = request.files['image']
     
+    efectos_solicitados = request.form.get('efectos', '')
+    lista_efectos = efectos_solicitados.split(',') if efectos_solicitados else []
+    
     try:
         imagen_nombre, ruta_entrada = gestor_archivos.guardar_imagen_original(
             archivo, app.config['UPLOAD_FOLDER']
         )
+        # efectos manuales. Modularizarlos despues para achicar la funcion principal.
+        if lista_efectos:
+            try:
+                procesador_manual = OpenCVProcessor()
+                procesador_manual.load_image(ruta_entrada)
+
+                for efecto in lista_efectos:
+                    match efecto:
+                        case 'grayscale':
+                            procesador_manual.to_grayscale()
+                        case 'binarize':
+                            procesador_manual.binarize()
+                        case 'noise_reduction':
+                            procesador_manual.reduce_noise()
+                        case 'contrast':
+                            procesador_manual.apply_brightness_contrast(alpha=1.5, beta=20)
+                        case _:
+                            print(f"Advertencia: El efecto '{efecto}' no está reconocido.")
+
+                nombre_intermedio = f"manual_{imagen_nombre}"
+                ruta_intermedia = os.path.join(app.config['UPLOAD_FOLDER'], nombre_intermedio)
+                procesador_manual.save(ruta_intermedia)
+                
+                # Reasignamos la ruta para el OCR
+                ruta_entrada = ruta_intermedia
+                
+            except Exception as e:
+                print(f"Advertencia: Falló la aplicación de filtros manuales: {e}")
         
-        texto_real, nombre_salida, nombre_final_ocr = OCRProcesador(
-            ruta_entrada, 
-            imagen_nombre, 
-            app.config['PROCESSED_FOLDER']
-        )
+        nombre_final_ocr = f"proc_{imagen_nombre}"
+        ruta_procesada = os.path.join(app.config['PROCESSED_FOLDER'], nombre_final_ocr)
+        procesador_ocr = OCRProcesador()
+        procesador_ocr.proces(ruta_entrada, ruta_procesada)
+        imagen_pil = Image.open(ruta_procesada)
+        configuracion_ocr = '-l spa --psm 6'
+        texto_real = pytesseract.image_to_string(imagen_pil, config=configuracion_ocr)
     
         nombre_txt = gestor_archivos.guardar_texto_extraido(
             texto_real, imagen_nombre, app.config['TEXT_FOLDER']
