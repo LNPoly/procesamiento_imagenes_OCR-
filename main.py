@@ -47,19 +47,22 @@ def previsualizar_filtros(): #modularizar esta función
         
     try:
         nombre_seguro = secure_filename(archivo.filename)
-        ruta_temporal = os.path.join(app.config['UPLOAD_FOLDER'], f"tmp_prev_{nombre_seguro}")
-        archivo.save(ruta_temporal)
+        ruta_temporal_entrada = os.path.join(app.config['UPLOAD_FOLDER'], f"tmp_in_{nombre_seguro}")
+        archivo.save(ruta_temporal_entrada)
         
         procesador_manual = OpenCVProcessor()
-        procesador_manual.load_image(ruta_temporal)
-        
+        procesador_manual.load_image(ruta_temporal_entrada)
         procesador_manual = motor_filtros.MotorFiltros.aplicar_lista_filtros(procesador_manual, lista_efectos)
-        base64_str = motor_filtros.MotorFiltros.convertir_a_base64(procesador_manual._image)
+        
+        nombre_temporal_salida = f"tmp_out_{nombre_seguro}"
+        ruta_temporal_salida = os.path.join(app.config['PROCESSED_FOLDER'], nombre_temporal_salida)
+        procesador_manual.save(ruta_temporal_salida)
 
-        if os.path.exists(ruta_temporal):
-            os.remove(ruta_temporal)
+        if os.path.exists(ruta_temporal_entrada):
+            os.remove(ruta_temporal_entrada)
             
-        return jsonify({'success': True, 'preview_base64': base64_str}), 200
+        url_preview = f"/imagenes/procesadas/{nombre_temporal_salida}"
+        return jsonify({'success': True, 'url_preview': url_preview}), 200
         
     except Exception as e:
         if 'ruta_temporal' in locals() and os.path.exists(ruta_temporal):

@@ -119,9 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // Reemplazamos el src de la vista previa local con el string Base64 puro
-                localPreview.src = data.preview_base64;
-            }else {
+                localPreview.src = data.url_preview + '?t=' + new Date().getTime();
+            } else {
                 console.error("Error en la previsualización del servidor:", data.error);
             }
         });
