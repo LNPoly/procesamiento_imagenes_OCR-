@@ -8,6 +8,8 @@ from src.procesador_imagen.procesador_morfologico import ProcesadorMorfologico
 # 4) Aplicar cambios morfológicos, 5) Guardar los resultados.
 
 class OCRProcesador(Inicializador):
+    
+    """Orquestador de filtros manuales mediante composición de clases."""
 
     def __init__(self):
         
@@ -21,6 +23,22 @@ class OCRProcesador(Inicializador):
         self.procesador_morfologico = ProcesadorMorfologico()
 
     def proces(self, input_path, output_path):
+        
+        """
+        Ejecuta la secuencia completa de procesamiento de imagen para OCR.
+
+        Esta función realiza:
+        1. Análisis de calidad (brillo, ruido, dimensiones).
+        2. Aplicación de filtros adaptativos (CLAHE, denoise) basados en el análisis.
+        3. Procesamiento morfológico (binarización, deskew).
+
+        Args:
+            input_path (str): Ruta de la imagen de entrada (pre-estandarizada).
+            output_path (str): Ruta donde se guardará la imagen final limpia.
+
+        Returns:
+            dict: Diccionario con las métricas de calidad analizadas (brightness, blur, etc.).
+        """
 
         img = cv2.imread(input_path)# se carga la imagen.
 
@@ -29,7 +47,7 @@ class OCRProcesador(Inicializador):
             return
 
         # se analisa la imagen.
-        analysis = self.procesador_imagen.analisar_image(img)
+        analysis = self.procesador_imagen.analizar_imagen(img)
 
         # se muestra el resultado del analisis.
         print("\n=== ANALISIS ===")
@@ -38,11 +56,11 @@ class OCRProcesador(Inicializador):
         print(f"Width: {analysis['width']}")
         print(f"Height: {analysis['height']}")
 
+        #Se comenta esta parte porque ya está aplicada con la clase Estandarizador.
         # corrección del tamaño.
-        if analysis["width"] < self.min_width:
-
-            print("Aplicando upscale...")
-            img = self.procesador_imagen.upscale_image(img)
+        # if analysis["width"] < self.min_width:
+        #     print("Aplicando upscale...")
+        #     img = self.procesador_imagen.upscale_image(img)
         
         # se pasa a escala de grises.
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

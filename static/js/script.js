@@ -125,11 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                localPreview.src = data.url_preview + '?t=' + new Date().getTime();
+
+                localPreview.src = data.imagen_b64;
             } else {
-                console.error("Error en la previsualización del servidor:", data.error);
-                
+                console.error("Error en el servidor:", data.error);
             }
+        })
+        .catch(err => {
+            console.error("Error de red al intentar previsualizar:", err);
         });
     }
 });

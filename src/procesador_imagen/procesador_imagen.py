@@ -10,7 +10,20 @@ import numpy as np
 class ProcesadorImagen:
     
     # función de analisis de la imagen.
-    def analisar_image(self, img):
+    def analizar_imagen(self, img):
+        
+        """
+        Calcula métricas clave de calidad visual sobre una imagen cargada.
+
+        Args:
+            img (numpy.ndarray): Matriz de la imagen cargada vía OpenCV.
+
+        Returns:
+            dict: Contiene:
+                - 'brightness': Promedio de intensidad de píxeles (0-255).
+                - 'blur': Varianza del Laplaciano (indicador de nitidez).
+                - 'width' / 'height': Dimensiones actuales.
+        """
         
         # a escala de grises
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -31,19 +44,19 @@ class ProcesadorImagen:
             "width": width,
             "height": height
         }
-    
+    #Se comenta esta Función porque ya se aplica en estandarizador
     # Función que agranda la imagen para ayudar al OCR
-    def upscale_image(self, img):
+    # def upscale_image(self, img):
         
-        # Aumenta la imagen al doble y rellena si falta pixeles.
-        return cv2.resize(
-            img,
-            None,
-            fx=2, # duplica tamaño.
-            fy=2, # duplica tamaño.
-            interpolation=cv2.INTER_CUBIC # ideal para OCR para el relleno
-            # de pixeles faltante.
-        )
+    #     # Aumenta la imagen al doble y rellena si falta pixeles.
+    #     return cv2.resize(
+    #         img,
+    #         None,
+    #         fx=2, # duplica tamaño.
+    #         fy=2, # duplica tamaño.
+    #         interpolation=cv2.INTER_CUBIC # ideal para OCR para el relleno
+    #         # de pixeles faltante.
+    #     )
     
     # Función de mejora el contraste entre figura y fondo.
     def apply_clahe(self, gray):
