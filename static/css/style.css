@@ -46,8 +46,10 @@ body{
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     overflow-x: hidden !important;
     color: var(--text-bright);
+    padding: 40px 0;
 }
 
 header{
@@ -227,7 +229,6 @@ form button:hover{
     margin-top: 15px;
 }
 
-
 .preview-container, .resultado-container {
     display: none;
     padding: 15px;
@@ -241,8 +242,8 @@ form button:hover{
 
 .resultado-container {
 
-    width: 80%;
-    height: auto;    
+    width: 100%;
+    height: auto;   
 }
 
 .resultado-container h2 {
@@ -257,7 +258,7 @@ form button:hover{
 .thumbnail {
     border: 2px solid var(--tron-cyan);
     box-shadow: var(--tron-cyan-glow);
-    max-width: 200px;
+    max-width: 250px;
     height: auto;
     display: block;
     margin-top: 10px;
@@ -268,10 +269,40 @@ form button:hover{
     height: auto;
     border-radius: 6px;
 }
+
+* --- ESTILOS PARA EL PANEL DE MÉTRICAS --- */
+#panelMetricas {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid var(--tron-cyan);
+    box-shadow: 0 0 5px var(--tron-cyan-dim);
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+#panelMetricas h4 {
+    color: var(--tron-cyan);
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    text-shadow: var(--tron-cyan-glow);
+}
+
+#panelMetricas p {
+    color: var(--text-color);
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+#panelMetricas strong {
+    color: var(--text-bright);
+}
+
 .output-texto {
     background-color: var(--secondary-color);
     padding: 10px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid var(--tron-cyan);
     font-family: monospace;
     margin-top: 10px;
 }

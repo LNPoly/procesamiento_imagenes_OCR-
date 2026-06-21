@@ -48,11 +48,15 @@ def previsualizar_filtros(): #modularizar esta función
     try:
         nombre_seguro = secure_filename(archivo.filename)
         ruta_temporal_entrada = os.path.join(app.config['UPLOAD_FOLDER'], f"tmp_in_{nombre_seguro}")
-        archivo.save(ruta_temporal_entrada)
+        archivo.save(ruta_temporal_entrada)  
         
         procesador_manual = OpenCVProcessor()
         procesador_manual.load_image(ruta_temporal_entrada)
-        procesador_manual = motor_filtros.MotorFiltros.aplicar_lista_filtros(procesador_manual, lista_efectos)
+        print(f"DEBUG: ¿La imagen se cargó correctamente?: {procesador_manual._image is not None}", flush=True)
+        
+        if efectos_solicitados:
+            lista_efectos = efectos_solicitados.split(',')
+            procesador_manual = motor_filtros.MotorFiltros.aplicar_lista_filtros(procesador_manual, lista_efectos)
         
         nombre_temporal_salida = f"tmp_out_{nombre_seguro}"
         ruta_temporal_salida = os.path.join(app.config['PROCESSED_FOLDER'], nombre_temporal_salida)
@@ -95,19 +99,19 @@ def procesar_archivo():
 
                 for efecto in lista_efectos:
                     match efecto:
-                        case 'grayscale':
-                            procesador_manual.to_grayscale()
-                        case 'binarize':
-                            procesador_manual.binarize()
-                        case 'noise_reduction':
-                            procesador_manual.reduce_noise()
-                        case 'contrast':
-                            procesador_manual.apply_brightness_contrast(alpha=1.5, beta=20)
+                        case 'gris':
+                            procesador_manual.a_escala_grises()
+                        case 'binarizar':
+                            procesador_manual.binarizar()
+                        case 'desenfoque':
+                            procesador_manual.reduccion_ruido()
+                        case 'contrast' | 'contraste':
+                            procesador_manual.aplicar_brillo_contraste(alpha=1.5, beta=20)
                         case _:
                             print(f"Advertencia: El efecto '{efecto}' no está reconocido.")
 
                 nombre_intermedio = f"manual_{imagen_nombre}"
-                ruta_intermedia = os.path.join(app.config['UPLOAD_FOLDER'], nombre_intermedio)
+                ruta_intermedia = os.path.join(app.config['UPLOAD_FOLDER'], nombre_intermedio, "debug_test.png")
                 procesador_manual.save(ruta_intermedia)
                 
                 # Reasignamos la ruta para el OCR
@@ -119,9 +123,12 @@ def procesar_archivo():
         nombre_final_ocr = f"proc_{imagen_nombre}"
         ruta_procesada = os.path.join(app.config['PROCESSED_FOLDER'], nombre_final_ocr)
         procesador_ocr = OCRProcesador()
-        procesador_ocr.proces(ruta_entrada, ruta_procesada)
+        
+        datos_analisis = procesador_ocr.proces(ruta_entrada, ruta_procesada)
+        
         imagen_pil = Image.open(ruta_procesada)
         configuracion_ocr = '-l spa --psm 6'
+        
         texto_real = pytesseract.image_to_string(imagen_pil, config=configuracion_ocr)
     
         nombre_txt = gestor_archivos.guardar_texto_extraido(
@@ -133,7 +140,8 @@ def procesar_archivo():
             'msg': '¡Imagen procesada y analizada con éxito!',
             'url_original': f"/imagenes/originales/{imagen_nombre}",
             'url_procesada': f"/imagenes/procesadas/{nombre_final_ocr}",
-            'texto_analisis': texto_real
+            'texto_analisis': texto_real,
+            'datos_analisis': datos_analisis
         }), 200
         
     except Exception as e:

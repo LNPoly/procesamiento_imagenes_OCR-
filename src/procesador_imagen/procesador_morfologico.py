@@ -21,7 +21,7 @@ class ProcesadorMorfologico:
 
         # calcula posición y ángulo de los pixeles negros.
         coords = np.column_stack(np.where(image > 0))
-        angulo = cv2.minAreaRect(coords)[-1]
+        angulo = float(cv2.minAreaRect(coords)[-1])
 
         # ajuste del angulo
         if angulo < -45:
@@ -29,8 +29,8 @@ class ProcesadorMorfologico:
         else:
             angulo = -angulo
 
-        (h, w) = image.shape[:2] # el tamaño de la imagen.
-        centro = (w // 2, h // 2) # calculo centro de la imagen.
+        (height, width) = image.shape[:2] # el tamaño de la imagen.
+        centro = (width // 2, height // 2) # calculo centro de la imagen.
 
         # se crea matriz de rotación.
         Matriz = cv2.getRotationMatrix2D(
@@ -43,7 +43,7 @@ class ProcesadorMorfologico:
         return cv2.warpAffine(
             image, # imagen
             Matriz, # la matriz
-            (w, h), # el tamaño.
+            (width, height), # el tamaño.
             # se usan para mentener cálidad.
             flags=cv2.INTER_CUBIC, 
             borderMode=cv2.BORDER_REPLICATE 

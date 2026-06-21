@@ -1,15 +1,28 @@
 import cv2
 import numpy as np
 
+from .binarizacion import Binarizar
+from .brillo import BrilloContraste
+from .escala_de_grises import EscalaGrises
+from .gaussiano import FiltroGaussiano
+
+
 class OpenCVImageReader:
     def open(self, path):
         return cv2.imread(path)
+class OpenCVProcessor(BrilloContraste,EscalaGrises,Binarizar,FiltroGaussiano):
     
-class OpenCVProcessor:
     def __init__(self):
         self._image = None
         self.reader = OpenCVImageReader()
 
+    def _ensure_image_loaded(self):
+        
+        """Método auxiliar para validación de estado."""
+        
+        if self._image is None:
+            raise RuntimeError("Operación denegada: No hay ninguna imagen cargada.")
+        
     def load_image(self, path):
         
         """Carga la imagen y la almacena en el estado del procesador."""
@@ -29,52 +42,3 @@ class OpenCVProcessor:
             raise IOError(f"Error: No se pudo guardar la imagen en {output_path}")
             
         print(f"Imagen guardada exitosamente en: {output_path}")
-
-    def to_grayscale(self):
-        
-        """Convierte la imagen a escala de grises."""
-        
-        self._ensure_image_loaded()
-        if len(self._image.shape) == 3:
-            self._image = cv2.cvtColor(self._image, cv2.COLOR_BGR2GRAY)
-        return self._image
-
-    def binarize(self, threshold: int = 127):
-        
-        """Convierte a blanco y negro absoluto."""
-        
-        self._ensure_image_loaded()
-        
-        # Asegurar escala de grises antes de binarizar
-        matriz_operativa = self._image
-        if len(self._image.shape) == 3:
-            matriz_operativa = cv2.cvtColor(self._image, cv2.COLOR_BGR2GRAY)
-            
-        _, self._image = cv2.threshold(matriz_operativa, threshold, 255, cv2.THRESH_BINARY)
-        return self._image
-
-    def apply_brightness_contrast(self, alpha: float, beta: int):
-        
-        """Ajusta brillo (beta) y contraste (alpha)."""
-        
-        self._ensure_image_loaded()
-        self._image = cv2.convertScaleAbs(self._image, alpha=alpha, beta=beta)
-        return self._image
-
-    def reduce_noise(self, kernel_size: int = 5):
-        
-        """Aplica desenfoque Gaussiano."""
-        
-        self._ensure_image_loaded()
-        if kernel_size % 2 == 0 or kernel_size <= 0:
-            raise ValueError("El tamaño del kernel debe ser un número impar positivo.")
-        
-        self._image = cv2.GaussianBlur(self._image, (kernel_size, kernel_size), 0)
-        return self._image
-
-    def _ensure_image_loaded(self):
-        
-        """Método auxiliar para validación de estado."""
-        
-        if self._image is None:
-            raise RuntimeError("Operación denegada: No hay ninguna imagen cargada.")

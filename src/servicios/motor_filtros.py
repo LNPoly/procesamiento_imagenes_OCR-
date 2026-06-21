@@ -11,12 +11,12 @@ class MotorFiltros:
             efecto = efecto.strip().lower()
             match efecto:
                 case 'gris':
-                    procesador.to_grayscale()
+                    procesador.a_escala_grises()
                 case 'binarizar':
-                    procesador.binarize(threshold=127)
-                case 'brillo' | 'contrast':
-                    procesador.apply_brightness_contrast(alpha=1.0, beta=30)
+                    procesador.binarizar(threshold=127)
+                case 'brillo' | 'contraste':
+                    procesador.brillo_contraste(alpha=1.0, beta=30)
                 case 'desenfoque':
-                    procesador.reduce_noise(kernel_size=5)
+                    procesador.reduccion_ruido(kernel_size=5)
 
         return procesador

@@ -41,6 +41,12 @@ uploadForm.addEventListener('submit', async function(e) {
             statusMsg.style.color = "green";
             finalImage.src = data.url_procesada;
             textAnalysisOutput.textContent = data.texto_analisis;
+
+            const metricas = data.datos_analisis;
+            document.getElementById('panelMetricas').style.display = 'block';
+            document.getElementById('metricaBrillo').textContent = metricas.brightness.toFixed(2);
+            document.getElementById('metricaDesenfoque').textContent = metricas.blur.toFixed(2);
+            document.getElementById('metricaDimensiones').textContent = `${metricas.width} x ${metricas.height} px`;
         } else {
             statusMsg.textContent = data.error || "Ocurrió un error inesperado.";
             statusMsg.style.color = "red";
@@ -122,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localPreview.src = data.url_preview + '?t=' + new Date().getTime();
             } else {
                 console.error("Error en la previsualización del servidor:", data.error);
+                
             }
         });
     }
