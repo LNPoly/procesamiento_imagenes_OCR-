@@ -1,1 +1,0 @@
-# aqui va la logica del procesamiento de imagenes, se pueden agregar funciones para mejorar la calidad de la imagen, eliminar ruido, etc.

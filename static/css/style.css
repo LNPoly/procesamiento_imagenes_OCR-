@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --bg-dark: #020202;
+
+    --tron-cyan: #00ffff;
+    --tron-cyan-dim: #00ffff26;
+    --tron-cyan-glow: 0 0 10px #00ffff99, 0 0 20px #00ffff66;
+
+    --tron-orange: #ff8c00;
+    --tron-orange-glow: 0 0 10px #ff8c0099, 0 0 20px #ff8c0066;
+
+    --text-bright: #e0ffff;
+    --text-color: #7aaebd;
+    
+    --transition: all 0.3s ease-in-out;
+    --family-font: 'Nova Square', cursive;
+
+}
+
+/*Fondo Grilla*/
+.grilla-tron{
+
+    background-color: var(--bg-dark);
+    background-image: 
+        linear-gradient(var(--tron-cyan-dim) 1px, transparent 1px),
+        linear-gradient(90deg, var(--tron-cyan-dim) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: center; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh;
+    z-index: -1;
+}
+
+body{
+    font-family: var(--family-font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-x: hidden !important;
+    color: var(--text-bright);
+    padding: 40px 0;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+header h1{
+    color: var(--tron-cyan);
+    text-shadow: var(--tron-cyan-glow);
+    border-bottom: 1px solid var(--tron-cyan);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    padding-bottom: 10px;
+    box-shadow: 0 10px 10px -10px var(--tron-cyan);
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1% auto;
+    width: 85%;
+    gap: 30px;
+    flex-grow: 1;
+}
+
+.container-integrantes{
+    background-color: var(--bg-dark);
+    border: 2px solid var(--tron-cyan);
+    border-radius: 5px;
+    box-shadow: var(--tron-cyan-glow);
+    width: 60%;
+    padding: 15px;
+}
+
+form, .resultado-container{
+    width: 55%;
+    height: auto;
+    padding: 10px;
+}
+
+.container-integrantes h2{
+    text-shadow: 0 0 5px #00f0ff80;
+    text-align: center;
+    margin: 10px 0;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.container-integrantes ul{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.container-integrantes ul li{
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    opacity: 0.85;
+}
+
+.texto-container{
+    background-color: var(--bg-dark);
+    border: 2px solid var(--tron-cyan);
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: var(--tron-cyan-glow);
+
+}
+
+.texto-container .text{
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-align: justify;
+}
+
+.container-procesador{
+    background-color: var(--bg-dark);
+    border: 2px solid var(--tron-cyan);
+    box-shadow: var(--tron-cyan-glow);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+}
+
+.linea-separador{
+    width: 80%;
+    height: 2px;
+    background-color: var(--tron-cyan);
+    margin: 20px auto;
+    opacity: 0.5;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+}
+
+form label{
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+
+}
+
+form input[type="file"]{
+    margin-bottom: 20px;
+    font-family: var(--family-font);
+    background: transparent;
+}
+
+form button{
+    background-color: var(--text-color);
+    color: var(--tron-cyan);
+    border: 2px solid var(--tron-cyan);
+    padding: 15px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: bold;
+    transition: var(--transition);
+    text-shadow: 0 0 5px var(--tron-cyan);
+    box-shadow: var(--tron-cyan-glow);
+    width: 90%;
+}
+
+form button:hover{
+    background-color: var(--tron-orange);
+    color: #000;
+    border-color: var(--tron-orange);
+    box-shadow: var(--tron-orange-glow);
+    text-shadow: none;
+}
+
+.container-procesador .panelEfectos{
+    border: 2px solid var(--tron-cyan);
+    box-shadow: var(--tron-cyan-glow);
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.panelEfectos p{
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.panelEfectos select{
+    margin-bottom: 10px;
+}
+
+.panelEfectos ul{
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.panelEfectos button{
+    margin-top: 15px;
+}
+
+.preview-container, .resultado-container {
+    display: none;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.preview-container h3{
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.resultado-container {
+
+    width: 100%;
+    height: auto;   
+}
+
+.resultado-container h2 {
+    margin-bottom: 10px;
+
+}
+.resultado-container p {
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.thumbnail {
+    border: 2px solid var(--tron-cyan);
+    box-shadow: var(--tron-cyan-glow);
+    max-width: 250px;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+.img-final {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+* --- ESTILOS PARA EL PANEL DE MÉTRICAS --- */
+#panelMetricas {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid var(--tron-cyan);
+    box-shadow: 0 0 5px var(--tron-cyan-dim);
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+#panelMetricas h4 {
+    color: var(--tron-cyan);
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    text-shadow: var(--tron-cyan-glow);
+}
+
+#panelMetricas p {
+    color: var(--text-color);
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+#panelMetricas strong {
+    color: var(--text-bright);
+}
+
+.output-texto {
+    background-color: var(--secondary-color);
+    padding: 10px;
+    border-left: 4px solid var(--tron-cyan);
+    font-family: monospace;
+    margin-top: 10px;
+}
+
+footer{
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+}
+footer p{
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
