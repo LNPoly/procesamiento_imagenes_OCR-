@@ -32,6 +32,22 @@ La separación permite llevar adelante la responsabilidad única donde cada clas
 
 Se busca como objetivo general  obtener una imagen limpia, con alto contraste, libre de ruido e inclinaciones, para usar de insumo en el OCR.
 
+## En éste proyecto se utiliza
+
+- clipLimit = 2.0:  valor aconsejado para obtener un equilibrio adecuado entre mejora visual y estabilidad.
+
+- Parámetro tileGridSize:
+El parámetro tileGridSize determina en cuántas regiones se divide la imagen para realizar la corrección local.
+
+- tileGridSize = (8,8):
+La imagen se divide en una cuadrícula de ocho filas por ocho columnas, permitiendo corregir de forma independiente diferentes zonas del documento.
+
+- Método denoise():
+Este método elimina el ruido utilizando el algoritmo Non-Local Means.
+La técnica compara regiones similares de la imagen para eliminar pequeñas perturbaciones visuales sin destruir los detalles importantes del texto.
+
+- Parámetro h:
+El parámetro h controla la intensidad de la reducción de ruido, valores bajos realizan una limpieza ligera mientra que altos eliminan más ruido, pero pueden borrar detalles finos de los caracteres.
 
 ## Clase ProcesadorImagen
 
@@ -59,23 +75,6 @@ El objetivo principal es aumentar el contraste entre el texto y el fondo de la i
 - *Parámetro clipLimit:*
 El parámetro clipLimit controla la intensidad máxima del aumento de contraste.
 Valores bajos generan mejoras suaves, mientras que valores altos pueden producir resultados artificiales o amplificar el ruido existente.
-
-## En éste proyecto se utiliza
-
-- clipLimit = 2.0:  valor aconsejado para obtener un equilibrio adecuado entre mejora visual y estabilidad.
-
-- Parámetro tileGridSize:
-El parámetro tileGridSize determina en cuántas regiones se divide la imagen para realizar la corrección local.
-
-- tileGridSize = (8,8):
-La imagen se divide en una cuadrícula de ocho filas por ocho columnas, permitiendo corregir de forma independiente diferentes zonas del documento.
-
-- Método denoise():
-Este método elimina el ruido utilizando el algoritmo Non-Local Means.
-La técnica compara regiones similares de la imagen para eliminar pequeñas perturbaciones visuales sin destruir los detalles importantes del texto.
-
-- Parámetro h:
-El parámetro h controla la intensidad de la reducción de ruido, valores bajos realizan una limpieza ligera mientra que altos eliminan más ruido, pero pueden borrar detalles finos de los caracteres.
 
 
 ## Clase ProcesadorMorfologico
