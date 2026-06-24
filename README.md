@@ -93,6 +93,24 @@ Una vez completados los pasos anteriores, ya podés levantar el servidor local d
 ````
 python main.py
 ````
-Abrí tu navegador web e ingresá a la dirección --> http://127.0.0.1:5000
+Abrí tu navegador web e ingresá a la dirección de localhost:5000
 
 ---
+
+# Modo de uso del programa
+
+#### **Selección de imagen a analizar**
+Dentro de la página donde dice **"selecciona una imágen para analizar"**, puedes hacer click en *"seleccinar archivo"* para poder elegir una imagen dentro del explorador de archivos.
+- Las imágenes que se utilizaron para éste proyecto están en la ruta: /data/img_originales
+
+**Aplicación de filtros manuales (opcionales)**
+
+Una vez elegida la imagen, se da una vista previa de la imagen elegida y un menú desplegable para poder aplicar, o no, los filtros manuales como *escala de grises*, *binarización*, *reducción de ruido* y el *brillo/contraaste*, a éste último filtro usarlo con precaución ya que puede afectar al resultado del procesamiento si la imagen es muy clara.
+
+La confirmación de la aplicación del filtro se puede visualizar en la vista previa de imagen y debajo del botón descargar, el cual también puede elegir guardar la versión de la imagen con el filtro/os aplicados.
+
+**Resultado final**
+
+Una vez que se hayan aplicado los filtros se procede a accionar el botón de **"terminar de editar"** y acto seguido hacer click nuevamente en el botón **"subir y procesar"** para poder visualizar el resultado del OCR más la imagen final con la descripcion de metricas y el texto identificado.
+
+
