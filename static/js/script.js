@@ -137,4 +137,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// script para descarga de imagen manual
+document.getElementById('btn-descargar-filtro').addEventListener('click', function() {
+        
+    const imgElement = document.getElementById('localPreview');
+    const imagenBase64 = imgElement.src;
     
+    if (!imagenBase64 || imagenBase64 === '') {
+        alert("No hay ninguna imagen para descargar aún.");
+        return;
+    }
+
+    const enlace = document.createElement('a');
+    enlace.href = imagenBase64;
+    enlace.download = 'imagen_filtrada.jpg'; 
+    
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+});
